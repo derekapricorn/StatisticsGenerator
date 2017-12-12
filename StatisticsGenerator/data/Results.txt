@@ -1,0 +1,4 @@
+CashPrem	MinValue	0
+CashPrem	MaxValue	165215335.38
+ResvAssumed	Average	-27923645.44
+CashPrem	Average	134444848.063333
