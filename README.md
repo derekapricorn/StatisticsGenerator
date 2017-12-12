@@ -4,11 +4,11 @@
 This C# program is a command line tool that calculates simple statistics from a tab deliminted text file.
 
 - Important files
-	- __/StatisticsGenerator.sln__: the project entry.
-	- __/StatisticsGenerator/StatisticsGenerator/data/TotalTemp.txt__: data file
-	- __/StatisticsGenerator/StatisticsGenerator/data/Configuration.txt__: configuration file where all the statistics commands are.
-	- __/StatisticsGenerator/StatisticsGenerator/Program.cs__: C# script for the project.
-	- __/StatisticsGenerator/StatisticsGenerator/StatisticsGeneratorTest.cs__: NUnit test cases.
+	- _/StatisticsGenerator.sln_: the project entry.
+	- _/StatisticsGenerator/StatisticsGenerator/data/TotalTemp.txt_: data file
+	- _/StatisticsGenerator/StatisticsGenerator/data/Configuration.txt_: configuration file where all the statistics commands are.
+	- _/StatisticsGenerator/StatisticsGenerator/Program.cs_: C# script for the project.
+	- _/StatisticsGenerator/StatisticsGenerator/StatisticsGeneratorTest.cs_: NUnit test cases.
 ---
 
 ## System Requirements
