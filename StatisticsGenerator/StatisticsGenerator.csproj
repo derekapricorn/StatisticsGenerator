@@ -35,9 +35,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="MainClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatisticsGeneratorTests.cs" />
+    <Compile Include="Task.cs" />
+    <Compile Include="CalculateStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
