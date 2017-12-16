@@ -1,0 +1,4 @@
+CashPrem	MinValue	MinValue
+CashPrem	MaxValue	MaxValue
+ResvAssumed	Average	MaxValue
+CashPrem	Average	MaxValue

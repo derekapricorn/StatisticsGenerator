@@ -1,0 +1,5 @@
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGenerator/bin/Release/StatisticsGenerator.exe
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGenerator/bin/Release/nunit.framework.dll
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGenerator/bin/Release/nunit.framework.xml
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGenerator/obj/x86/Release/StatisticsGenerator.csproj.CoreCompileInputs.cache
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGenerator/obj/x86/Release/StatisticsGenerator.exe

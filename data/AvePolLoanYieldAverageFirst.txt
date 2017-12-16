@@ -1,0 +1,2 @@
+AvePolLoanYield	Average	FirstValue
+

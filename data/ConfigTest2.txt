@@ -1,0 +1,4 @@
+CashPerm	Average	MaxValue
+ResvAssumed	MinValue	FirstValue
+Something	else	that's	not	right
+	

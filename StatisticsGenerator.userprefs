@@ -1,11 +1,25 @@
 ﻿<Properties StartupConfiguration="{DCAFA572-A8FD-4DAF-86A1-07874CF828DE}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="StatisticsGenerator/StatisticsGeneratorTests.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="StatisticsGenerator/MainClass.cs">
     <Files>
-      <File FileName="StatisticsGenerator/MainClass.cs" Line="40" Column="10" />
-      <File FileName="StatisticsGenerator/StatisticsGeneratorTests.cs" Line="78" Column="10" />
-      <File FileName="StatisticsGenerator/Task.cs" Line="12" Column="15" />
-      <File FileName="StatisticsGenerator/CalculateStatistics.cs" Line="50" Column="65" />
+      <File FileName="StatisticsGeneratorTests/StatisticsGeneratorTests.cs" Line="56" Column="33" />
+      <File FileName="StatisticsGenerator/CalculateStatistics.cs" Line="193" Column="6" />
+      <File FileName="StatisticsGenerator/MainClass.cs" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="StatisticsGenerator" expanded="True">
+            <Node name="StatisticsGeneratorTests" expanded="True">
+              <Node name="StatisticsGeneratorTests" expanded="True">
+                <Node name="TestParseConfig" expanded="True">
+                  <Node name="InvalidConfig" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -13,5 +27,6 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.StatisticsGenerator PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.StatisticsGeneratorTests PreferredExecutionTarget="MonoDevelop.Default" />
   <MultiItemStartupConfigurations />
 </Properties>

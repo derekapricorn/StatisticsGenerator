@@ -1,0 +1,2 @@
+CashPrem	MinValue	MinValue
+

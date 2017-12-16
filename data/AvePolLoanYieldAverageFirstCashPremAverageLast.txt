@@ -1,0 +1,3 @@
+AvePolLoanYield	Average	FirstValue
+CashPrem	Average	LastValue
+

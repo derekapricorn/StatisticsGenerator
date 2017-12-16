@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Reflection;
 namespace StatisticsGenerator
 {
     public class CalculateStatistics
     {
-        string _input;
-        string _configuration;
-        string _totalTemp;
-        List<Task> taskList = new List<Task>();
-
-        public string Input { get { return _input; } set { _input = value; } }
-        public string Configuration { get { return _configuration; } set { _configuration = value; } }
-        public string TotalTemp { get { return _totalTemp; } set { _totalTemp = value; } }
+        public List<ICalculation> taskList = new List<ICalculation>();
+        public string Input { get; set; }
+        public string DataPath { get; set; }
+        public string Configuration { get; set; }
+        public string TotalTemp { get; set; }
 
         public CalculateStatistics(string _input)
         {
-            this._input = _input;
+            Input = _input;
         }
 
         //Cascading strucutre to process data only if all satisfactory conditions are met
@@ -39,34 +38,34 @@ namespace StatisticsGenerator
         public bool ValidateInput()
         {
             var strArr = this.Input.Trim().Split();
-            if (strArr.Length != 2)
+            if (strArr.Length != 3)
             {
                 Console.WriteLine("Invalid input: check number of files");
                 return false;
             }
+            //check if path is valid
             //update properties to reflect the pathnames
-            var dir = System.IO.Directory.GetCurrentDirectory().Replace("bin/Debug", "data");
-            TotalTemp = System.IO.Path.Combine(dir, strArr[0]);
-            Configuration = System.IO.Path.Combine(dir, strArr[1]);
-            return true;
+            if (Directory.Exists(strArr[0]))
+            {
+                DataPath = strArr[0];
+                TotalTemp = System.IO.Path.Combine(DataPath, strArr[1]);
+                Configuration = System.IO.Path.Combine(DataPath, strArr[2]);
+                return true;
+            }
+            Console.WriteLine("Invalid path");
+            return false;            
         }
 
         //Validate if the files exist in the path specified either implicitly or explicitly
         //Return true if files exist, false otherwise
-        public bool ValidateFiles(params string[] list)
+        public bool ValidateFiles()
         {
             Console.WriteLine("Validate Files");
-
-            //account for the unit test case where path was not established earlier
-            if (list.Length == 1)
-            {
-                TotalTemp = list[0] + TotalTemp;
-                Configuration = list[0] + Configuration;
-            }
+            Console.WriteLine("Totaltemp is at " + TotalTemp);
+            Console.WriteLine("configuration is at" + Configuration);
 
             if (System.IO.File.Exists(TotalTemp) && System.IO.File.Exists(Configuration))
             {
-
                 return true;
             }
             else
@@ -78,18 +77,52 @@ namespace StatisticsGenerator
             }
         }
 
+        public Dictionary<string, Type> FindAvaialbleTypes ()
+        {
+            string calcName;
+            //Dictionary<string, ICalculation> dict = new Dictionary<string, ICalculation>(StringComparer.InvariantCultureIgnoreCase);
+            Dictionary<string, Type> dict = new Dictionary<string, Type>();
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            foreach (Type mytype in types
+                     .Where(mytype => mytype.GetInterfaces()
+                            .Contains(typeof(ICalculation)))) //assume the interface is known to client
+            {
+                calcName = mytype.ToString().Replace("Calculation", "").Replace(mytype.Namespace, "").Replace(".","");
+                dict[calcName] = mytype;
+            }
+            return dict;
+        }
+
         //Parse configuration commands. 
         //Return true if commands are successfully parsed, false otherwise.
         public bool ParseConfig()
         {
             Console.WriteLine("Parse config file");
+
+            string varName;
+            string statCalc;
+            string period;
             string[] configLines = System.IO.File.ReadAllLines(Configuration);
+            var Operations = FindAvaialbleTypes();
             foreach (string line in configLines)
             {
                 string[] strArr = line.Trim().Split();
                 if (ValidateArguments(strArr))
                 {
-                    taskList.Add(new Task(strArr));
+                    varName = strArr[0];
+                    statCalc = strArr[1];
+                    period = strArr[2];
+
+                    //see if the name matches with statCalc
+                    //if so instanitiate with implementation
+                    if (Operations.ContainsKey(statCalc))
+                    {
+                        ICalculation newOp = (StatisticsGenerator.ICalculation)Operations[statCalc].GetConstructor(new Type[] { }).Invoke(new object[] { });
+                        newOp.PeriodChoice = period;
+                        newOp.VarName = varName;
+                        newOp.StatCalc = statCalc;
+                        taskList.Add(newOp);
+                    }
                 }
             }
             return (taskList.Any());
@@ -114,79 +147,47 @@ namespace StatisticsGenerator
         {
             //read data line by line 
             Console.WriteLine("Process Data");
-
-            foreach (string line in System.IO.File.ReadLines(TotalTemp))
+            try 
             {
-                string[] lineEntries = line.Trim().Split();
-                lineEntries = lineEntries.Where(x => !string.IsNullOrEmpty(x)).ToArray(); // remove empty strings
-                if (lineEntries[0] == "ScenId")
-                {
-                    continue;
-                }
-                string lineVarName = lineEntries[1];
-                foreach (Task task in taskList)
-                {
-                    if (task.varName == lineVarName)
-                    {
-                        task.ResultList.Add(Calculate(lineEntries, task.periodChoice));
+                using (StreamReader sr = new StreamReader(TotalTemp)) {
+                    string line;
+                    while ((line = sr.ReadLine()) != null) {
+                        string[] lineEntries = line.Trim().Split();
+                        lineEntries = lineEntries.Where(x => !string.IsNullOrEmpty(x)).ToArray(); // remove empty strings
+                        if (lineEntries[0] == "ScenId") //skip first row
+                        {
+                            continue;
+                        }
+                        string lineVarName = lineEntries[1];
+                        int size = lineEntries.Count();
+                        var dataEntries= lineEntries.Skip(2).Take(size - 2).Select(double.Parse).ToArray();
+                        foreach (ICalculation operation in taskList) {
+                            if (operation.VarName == lineVarName) 
+                            {
+                                operation.HandleLine(dataEntries);
+                            }
+                        }
                     }
-                }
+                } 
             }
-        }
-
-        private double Calculate(string[] lineEntries, string periodChoice)
-        {
-            //calculate from entry 2 to end according to periodChoice
-            int size = lineEntries.Count();
-            var list = lineEntries.Skip(2).Take(size - 2).Select(double.Parse).ToArray();
-            Console.WriteLine("we are calculating");
-            switch (periodChoice)
+            catch (Exception e)
             {
-                case "FirstValue":
-                    return list[0];
-                case "LastValue":
-                    return list[list.Count() - 1];
-                case "MinValue":
-                    return list.Min();
-                case "MaxValue":
-                    return list.Max();
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
             }
-            return 0d;
         }
 
-        ////Calculate aggregate results from tast objects
         public void SaveResult()
         {
             Console.WriteLine("save result");
             string[] output = new string[taskList.Count()];
             int index = 0;
-            foreach (Task task in taskList)
+            foreach (ICalculation operation in taskList)
             {
-                string name = task.varName;
-                string stat = task.statCalc;
-                switch (task.statCalc)
-                {
-                    case "MinValue":
-                        string minValue = task.ResultList.Min().ToString();
-                        Console.WriteLine($"{name}\t{stat}\t{minValue}");
-                        output[index++] = $"{name}\t{stat}\t{minValue}";
-                        break;
-                    case "MaxValue":
-                        string maxValue = task.ResultList.Max().ToString();
-                        Console.WriteLine($"{name}\t{stat}\t{maxValue}");
-                        output[index++] = $"{name}\t{stat}\t{maxValue}";
-                        break;
-                    case "Average":
-                        string avgValue = task.ResultList.Average().ToString();
-                        Console.WriteLine($"{name}\t{stat}\t{avgValue}");
-                        output[index++] = $"{name}\t{stat}\t{avgValue}";
-                        break;
-                }
+                output[index++] = operation.ReturnFinal();
             }
-
             //output result to file
-            var dir = System.IO.Directory.GetCurrentDirectory().Replace("bin/Debug", "data");
-            string outputPath = System.IO.Path.Combine(dir, "Results.txt");
+            string outputPath = System.IO.Path.Combine(DataPath, "Results.txt");
             System.IO.File.WriteAllLines(outputPath, output);
         }
     }

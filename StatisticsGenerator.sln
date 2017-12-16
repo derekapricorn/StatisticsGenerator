@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatisticsGenerator", "StatisticsGenerator\StatisticsGenerator.csproj", "{DCAFA572-A8FD-4DAF-86A1-07874CF828DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatisticsGeneratorTests", "StatisticsGeneratorTests\StatisticsGeneratorTests.csproj", "{AAF6C3DE-0E84-41C2-B36D-8019C56B2526}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,9 @@ Global
 		{DCAFA572-A8FD-4DAF-86A1-07874CF828DE}.Debug|x86.Build.0 = Debug|x86
 		{DCAFA572-A8FD-4DAF-86A1-07874CF828DE}.Release|x86.ActiveCfg = Release|x86
 		{DCAFA572-A8FD-4DAF-86A1-07874CF828DE}.Release|x86.Build.0 = Release|x86
+		{AAF6C3DE-0E84-41C2-B36D-8019C56B2526}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AAF6C3DE-0E84-41C2-B36D-8019C56B2526}.Debug|x86.Build.0 = Debug|Any CPU
+		{AAF6C3DE-0E84-41C2-B36D-8019C56B2526}.Release|x86.ActiveCfg = Release|Any CPU
+		{AAF6C3DE-0E84-41C2-B36D-8019C56B2526}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

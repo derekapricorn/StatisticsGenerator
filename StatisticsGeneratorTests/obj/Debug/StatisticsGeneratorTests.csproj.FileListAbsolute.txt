@@ -1,0 +1,10 @@
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/StatisticsGeneratorTests.dll
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/StatisticsGeneratorTests.pdb
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/nunit.framework.dll
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/StatisticsGenerator.exe
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/StatisticsGenerator.pdb
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/bin/Debug/nunit.framework.xml
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/obj/Debug/StatisticsGeneratorTests.csprojResolveAssemblyReference.cache
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/obj/Debug/StatisticsGeneratorTests.csproj.CoreCompileInputs.cache
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/obj/Debug/StatisticsGeneratorTests.dll
+/Users/Derek/Projects/StatisticsGenerator/StatisticsGeneratorTests/obj/Debug/StatisticsGeneratorTests.pdb
