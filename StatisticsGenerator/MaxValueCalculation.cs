@@ -1,6 +1,9 @@
 ﻿using System;
 namespace StatisticsGenerator
 {
+    /// <summary>
+    /// Calculate the task where statistic selector is MaxValue
+    /// </summary>
     public class MaxValueCalculation : ICalculation
     {
         public string VarName { get; set; }
@@ -18,8 +21,9 @@ namespace StatisticsGenerator
         public string ReturnFinal()
         {
             string finalResult = Result.Value.ToString();
-            Console.WriteLine($"{VarName}\t{StatCalc}\t{finalResult}");
-            return $"{VarName}\t{StatCalc}\t{finalResult}";
+            string outputString = $"{VarName}\t{StatCalc}\t{finalResult}";
+            Console.WriteLine(outputString);
+            return outputString;
         }
     }
 }

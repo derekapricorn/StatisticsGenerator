@@ -9,7 +9,7 @@ namespace StatisticsGenerator
         string VarName { get; set; }
         string PeriodChoice { get; set; }
         string StatCalc { get; set; }
-        ResultType Result { get; }
+        ResultType Result { get; set; }
         void HandleLine(double[] values);
         string ReturnFinal();
     }

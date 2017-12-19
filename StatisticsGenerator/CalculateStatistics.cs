@@ -7,103 +7,50 @@ namespace StatisticsGenerator
 {
     public class CalculateStatistics
     {
-        public List<ICalculation> taskList = new List<ICalculation>();
-        public string Input { get; set; }
+        //public List<ICalculation> taskList = new List<ICalculation>();
         public string DataPath { get; set; }
         public string Configuration { get; set; }
         public string TotalTemp { get; set; }
 
-        public CalculateStatistics(string _input)
-        {
-            Input = _input;
-        }
+        static readonly string[] varNameSet = {"CashPrem", "AvePolLoanYield",
+            "ResvAssumed"};
+        static readonly string[] statSet = { "MinValue", "MaxValue", "Average" };
+        static readonly string[] periodSet = {"FirstValue", "LastValue",
+            "MinValue", "MaxValue"};
 
-        //Cascading strucutre to process data only if all satisfactory conditions are met
-        public void Run()
-        {
-            if (this.ValidateInput())
-            {
-                if (this.ValidateFiles())
-                {
-                    if (this.ParseConfig())
-                    {
-                        this.ProcessData();
-                        this.SaveResult();
-                    }
-                }
-            }
-        }
-
-        //valid input command. Return true if input is valid, false otherwise.
-        public bool ValidateInput()
-        {
-            var strArr = this.Input.Trim().Split();
-            if (strArr.Length != 3)
-            {
-                Console.WriteLine("Invalid input: check number of files");
-                return false;
-            }
-            //check if path is valid
-            //update properties to reflect the pathnames
-            if (Directory.Exists(strArr[0]))
-            {
-                DataPath = strArr[0];
-                TotalTemp = System.IO.Path.Combine(DataPath, strArr[1]);
-                Configuration = System.IO.Path.Combine(DataPath, strArr[2]);
-                return true;
-            }
-            Console.WriteLine("Invalid path");
-            return false;            
-        }
-
-        //Validate if the files exist in the path specified either implicitly or explicitly
-        //Return true if files exist, false otherwise
-        public bool ValidateFiles()
-        {
-            Console.WriteLine("Validate Files");
-            Console.WriteLine("Totaltemp is at " + TotalTemp);
-            Console.WriteLine("configuration is at" + Configuration);
-
-            if (System.IO.File.Exists(TotalTemp) && System.IO.File.Exists(Configuration))
-            {
-                return true;
-            }
-            else
-            {
-                Console.WriteLine(TotalTemp);
-                Console.WriteLine(Configuration);
-                Console.WriteLine("file(s) couldn't be found");
-                return false;
-            }
-        }
-
-        public Dictionary<string, Type> FindAvaialbleTypes ()
+        public static Dictionary<string, Type> GetCalculationTypes()
         {
             string calcName;
-            //Dictionary<string, ICalculation> dict = new Dictionary<string, ICalculation>(StringComparer.InvariantCultureIgnoreCase);
             Dictionary<string, Type> dict = new Dictionary<string, Type>();
             var types = Assembly.GetExecutingAssembly().GetTypes();
             foreach (Type mytype in types
                      .Where(mytype => mytype.GetInterfaces()
                             .Contains(typeof(ICalculation)))) //assume the interface is known to client
             {
-                calcName = mytype.ToString().Replace("Calculation", "").Replace(mytype.Namespace, "").Replace(".","");
+                calcName = mytype.ToString().Replace("Calculation", "").Replace(mytype.Namespace, "").Replace(".", "");
                 dict[calcName] = mytype;
             }
             return dict;
         }
 
+        public CalculateStatistics(string[] inputArr)
+        {
+            DataPath = inputArr[0];
+            TotalTemp = inputArr[1];
+            Configuration = inputArr[2];
+        }
+
         //Parse configuration commands. 
         //Return true if commands are successfully parsed, false otherwise.
-        public bool ParseConfig()
+        public List<ICalculation> ParseConfig(Dictionary<string, Type> Operations)
         {
             Console.WriteLine("Parse config file");
-
             string varName;
             string statCalc;
             string period;
-            string[] configLines = System.IO.File.ReadAllLines(Configuration);
-            var Operations = FindAvaialbleTypes();
+            var taskList = new List<ICalculation>();
+            string[] configLines = System.IO.File.ReadAllLines(Path.Combine(DataPath, Configuration));
+            configLines = configLines.Where(x => !string.IsNullOrEmpty(x)).ToArray(); // remove empty strings
             foreach (string line in configLines)
             {
                 string[] strArr = line.Trim().Split();
@@ -125,14 +72,8 @@ namespace StatisticsGenerator
                     }
                 }
             }
-            return (taskList.Any());
+            return taskList;
         }
-
-        static readonly string[] varNameSet = {"CashPrem", "AvePolLoanYield",
-            "ResvAssumed"};
-        static readonly string[] statSet = { "MinValue", "MaxValue", "Average" };
-        static readonly string[] periodSet = {"FirstValue", "LastValue",
-            "MinValue", "MaxValue"};
 
         //validate if config arguments exist in the sets.
         private bool ValidateArguments(string[] strArr)
@@ -143,13 +84,13 @@ namespace StatisticsGenerator
 
         //Process data by traversing through the table row by row.
         //summarize across columns if varName matches.
-        public void ProcessData()
+        public void ProcessData(List<ICalculation> taskList)
         {
             //read data line by line 
             Console.WriteLine("Process Data");
             try 
             {
-                using (StreamReader sr = new StreamReader(TotalTemp)) {
+                using (StreamReader sr = new StreamReader(Path.Combine(DataPath, TotalTemp))) {
                     string line;
                     while ((line = sr.ReadLine()) != null) {
                         string[] lineEntries = line.Trim().Split();
@@ -172,12 +113,12 @@ namespace StatisticsGenerator
             }
             catch (Exception e)
             {
-                Console.WriteLine("The file could not be read:");
+                Console.WriteLine("Data cannot be processed:");
                 Console.WriteLine(e.Message);
             }
         }
 
-        public void SaveResult()
+        public void SaveResult(List<ICalculation> taskList)
         {
             Console.WriteLine("save result");
             string[] output = new string[taskList.Count()];

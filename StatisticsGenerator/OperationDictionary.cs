@@ -4,7 +4,10 @@ using System.Linq;
 using System.IO;
 namespace StatisticsGenerator
 {
-    public class OperationDictionary
+    /// <summary>
+    /// Implement a class that contains a dictionary for functions
+    /// </summary>
+    public static class OperationDictionary
     {
         public static IDictionary<string, Func<double[], double>> PeriodOperation { get; set; } = new Dictionary<string, Func<double[], double>>()
         {

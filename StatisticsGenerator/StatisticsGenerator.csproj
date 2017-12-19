@@ -43,6 +43,7 @@
     <Compile Include="MinValueCalculation.cs" />
     <Compile Include="MaxValueCalculation.cs" />
     <Compile Include="AverageCalculation.cs" />
+    <Compile Include="InputParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

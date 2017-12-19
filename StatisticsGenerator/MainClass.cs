@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection;
 
 namespace StatisticsGenerator
 {
@@ -29,8 +29,25 @@ namespace StatisticsGenerator
                 }
                 try
                 {
-                    var calcStat = new CalculateStatistics(consoleInput);
-                    calcStat.Run();
+                    var inputArr = InputParser.Parse(consoleInput);
+                    if (inputArr != null)
+                    {
+                        //create calculation classes
+
+                        var calculationDict = CalculateStatistics.GetCalculationTypes();
+
+                        if (calculationDict.Count != 0)
+                        {
+                            //calculate statistics and save to file
+                            var statCalculator = new CalculateStatistics(inputArr);
+                            var taskList = statCalculator.ParseConfig(calculationDict);
+                            if (taskList.Any())
+                            {
+                                statCalculator.ProcessData(taskList);
+                                statCalculator.SaveResult(taskList);
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {

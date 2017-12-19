@@ -1,4 +1,5 @@
-CashPerm	Average	MaxValue
+CashPrem	Average	MaxValue
 ResvAssumed	MinValue	FirstValue
+CashPrem	MinValue	LastValue
 Something	else	that's	not	right
 	
